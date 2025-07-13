@@ -9,16 +9,20 @@ and Code editors
 
 ## Features
 
-- 🔧 ADB Command Execution
-- 📸 Device Screenshot Capture
-- 🎯 UI Layout Analysis
-- 📱 Device Package Management
+- 🔧 **Advanced ADB Command Execution** with comprehensive error handling
+- 📸 **Device Screenshot Capture** with automatic image compression
+- 🎯 **UI Layout Analysis** with clickable element detection and parsing
+- 📱 **Device Package Management** including action intent discovery
+- 🚀 **Automatic Device Selection** when only one device is connected
+- ⚙️ **Flexible Configuration** with optional config file
+- 🧪 **Comprehensive Testing Suite** with unit and integration tests
+- 📝 **Enhanced Documentation** with detailed docstrings and type hints
 
 ## Prerequisites
 
-- Python 3.x
+- Python 3.11+
 - ADB (Android Debug Bridge) installed and configured
-- Android device or emulator (not tested)
+- Android device with USB debugging enabled
 
 ## Installation
 
@@ -50,11 +54,13 @@ The server supports flexible device configuration with multiple usage scenarios.
 - No configuration file needed
 - Automatically connects to the only connected device
 - Perfect for development with a single test device
+- Enhanced error messages when multiple devices are detected
 
 **2. Manual Device Selection**
 
 - Use when you have multiple devices connected
 - Specify exact device in configuration file
+- Robust error handling for device not found scenarios
 
 ### Configuration File (Optional)
 
@@ -146,27 +152,36 @@ Replace:
 - `path/to/android-mcp-server` with the absolute path to where you cloned this
 repository
 
-<https://github.com/user-attachments/assets/c45bbc17-f698-43e7-85b4-f1b39b8326a8>
-
 ### Available Tools
 
-The server exposes the following tools:
+The server exposes the following tools with enhanced functionality:
 
 ```python
 def get_packages() -> str:
     """
     Get all installed packages on the device.
+    
+    Enhanced features:
+    - Comprehensive error handling
+    - Auto-retry logic for connection issues
+    
     Returns:
         str: A list of all installed packages on the device as a string
     """
 ```
 
 ```python
-def execute_adb_command(command: str) -> str:
+def execute_adb_shell_command(command: str) -> str:
     """
-    Executes an ADB command and returns the output.
+    Executes an ADB shell command and returns the output or an error.
+    
+    Enhanced features:
+    - Robust error handling and cleanup
+    - Input validation and sanitization
+    - Detailed error messages
+    
     Args:
-        command (str): The ADB command to execute
+        command (str): The ADB shell command to execute
     Returns:
         str: The output of the ADB command
     """
@@ -176,6 +191,13 @@ def execute_adb_command(command: str) -> str:
 def get_uilayout() -> str:
     """
     Retrieves information about clickable elements in the current UI.
+    
+    Enhanced features:
+    - Advanced XML parsing with error recovery
+    - Center coordinate calculation for elements
+    - Detailed element property extraction
+    - Temporary file cleanup
+    
     Returns a formatted string containing details about each clickable element,
     including their text, content description, bounds, and center coordinates.
 
@@ -188,15 +210,28 @@ def get_uilayout() -> str:
 def get_screenshot() -> Image:
     """
     Takes a screenshot of the device and returns it.
+    
+    Enhanced features:
+    - Automatic image compression (30% scale factor)
+    - Configurable output paths
+    - Resource cleanup and error handling
+    - Support for different image formats
+    
     Returns:
-        Image: the screenshot
+        Image: the compressed screenshot
     """
 ```
 
 ```python
 def get_package_action_intents(package_name: str) -> list[str]:
     """
-    Get all non-data actions from Activity Resolver Table for a package
+    Get all non-data actions from Activity Resolver Table for a package.
+    
+    Enhanced features:
+    - Input validation
+    - Comprehensive error handling
+    - Detailed activity intent parsing
+    
     Args:
         package_name (str): The name of the package to get actions for
     Returns:
@@ -205,11 +240,64 @@ def get_package_action_intents(package_name: str) -> list[str]:
     """
 ```
 
+## Development and Testing
+
+This project includes a comprehensive testing suite to ensure reliability and robustness.
+
+### Running Tests
+
+```bash
+# Run all tests with coverage
+python run_tests.py
+
+# Or using pytest directly
+uv run pytest
+
+# Run specific test files
+uv run pytest tests/test_adb_device_manager.py
+uv run pytest tests/test_integration.py
+uv run pytest tests/test_config.py
+```
+
+### Test Coverage
+
+The testing suite includes:
+
+- **Unit Tests** (`test_adb_device_manager.py`): Test core AdbDeviceManager functionality
+- **Integration Tests** (`test_integration.py`): Test server initialization and device selection flows
+- **Configuration Tests** (`test_config.py`): Test various configuration scenarios
+- **Automated Test Runner** (`run_tests.py`): Installs dependencies and runs tests with coverage
+
+### Key Improvements
+
+#### Enhanced Device Management
+- **Auto-device selection**: Automatically connects when only one device is available
+- **Robust error handling**: Graceful handling of connection failures and device issues
+- **Flexible initialization**: Support for both strict and lenient error handling modes
+- **Comprehensive logging**: Detailed error messages and status information
+
+#### Better Resource Management
+- **Automatic cleanup**: Temporary files are properly cleaned up after operations
+- **Memory efficiency**: Image compression reduces memory usage for screenshots
+- **Process management**: Proper handling of subprocess operations
+
+#### Code Quality
+- **Type hints**: Full type annotation throughout the codebase
+- **Comprehensive docstrings**: Detailed documentation for all public methods
+- **Modular design**: Clean separation of concerns and reusable components
+- **Error recovery**: Graceful degradation when operations fail
+
 ## Contributing
 
-Contributions are welcome!
+Contributions are welcome! Please ensure:
+
+1. All tests pass: `python run_tests.py`
+2. Code follows the existing style and patterns
+3. New features include appropriate tests
+4. Documentation is updated for any API changes
 
 ## Acknowledgments
 
-- Built with
-[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)
+- Built with [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction)
+- Uses [pure-python-adb](https://github.com/Swind/pure-python-adb) for device communication
+- Testing with [pytest](https://pytest.org/) framework
